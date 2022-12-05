@@ -15,6 +15,7 @@ importers:
       eslint-plugin-prettier: ^4.2.1
       husky: ^8.0.2
       prettier: ^2.8.0
+      rollup: ^3.5.1
       typescript: ^4.9.3
     devDependencies:
       '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/17.3.0
@@ -28,6 +29,7 @@ importers:
       eslint-plugin-prettier: registry.npmmirror.com/eslint-plugin-prettier/4.2.1_nrhoyyjffvfyk4vtlt5destxgm
       husky: registry.npmmirror.com/husky/8.0.2
       prettier: registry.npmmirror.com/prettier/2.8.0
+      rollup: registry.npmmirror.com/rollup/3.5.1
       typescript: registry.npmmirror.com/typescript/4.9.3
 
 packages:
@@ -1337,6 +1339,16 @@ packages:
     version: 1.0.0
     dev: true
 
+  registry.npmmirror.com/fsevents/2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz}
+    name: fsevents
+    version: 2.3.2
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
   registry.npmmirror.com/function-bind/1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/function-bind/-/function-bind-1.1.1.tgz}
     name: function-bind
@@ -2274,6 +2286,16 @@ packages:
     hasBin: true
     dependencies:
       glob: registry.npmmirror.com/glob/7.2.3
+    dev: true
+
+  registry.npmmirror.com/rollup/3.5.1:
+    resolution: {integrity: sha512-hdQWTvPeiAbM6SUkxV70HdGUVxsgsc+CLy5fuh4KdgUBJ0SowXiix8gANgXoG3wEuLwfoJhCT2V+WwxfWq9Ikw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rollup/-/rollup-3.5.1.tgz}
+    name: rollup
+    version: 3.5.1
+    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: registry.npmmirror.com/fsevents/2.3.2
     dev: true
 
   registry.npmmirror.com/run-parallel/1.2.0:
