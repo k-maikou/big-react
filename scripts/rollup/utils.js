@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import ts from 'rollup-plugin-typescript2'
 import cjs from '@rollup/plugin-commonjs'
+import replace from '@rollup/plugin-replace'
 
 const pkgPath = path.resolve(__dirname, '../../packages')
 // 因为React会有很多的包，按照node规范得放在node_module下
@@ -22,6 +23,9 @@ export function getPackageJson(pkgName) {
 	return JSON.parse(str)
 }
 
-export function getBaseRollupPlugins({ typescript = {} } = {}) {
-	return [cjs(), ts(typescript)]
+export function getBaseRollupPlugins({
+	alias = { __DEV__: true },
+	typescript = {}
+} = {}) {
+	return [replace(alias), cjs(), ts(typescript)]
 }

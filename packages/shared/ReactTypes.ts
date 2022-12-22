@@ -14,4 +14,5 @@ export interface ReactElementType {
 	__mark: string
 }
 
+// 一种是state，另一种是修改的方法
 export type Action<State> = State | ((prevState: State) => State)

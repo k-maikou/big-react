@@ -1,7 +1,9 @@
-import { Props, Key, Ref } from 'shared/ReactTypes'
-import { WorkTag } from './workTag'
+import { ReactElementType, Props, Key, Ref } from 'shared/ReactTypes'
+import { FunctionComponent, HostComponent, WorkTag } from './workTag'
 import { Flags, NoFlags } from './fiberFlags'
+import { Container } from 'hostConfig'
 
+// fiber节点
 export class FiberNode {
 	tag: WorkTag
 	type: any
@@ -16,9 +18,13 @@ export class FiberNode {
 
 	pendingProps: Props
 	memoizedProps: Props | null
+	memoizedState: any
 
 	alternate: FiberNode | null
-	flags: Flags | null
+	flags: Flags
+	subtreeFlags: Flags
+
+	updateQueue: unknown
 
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
 		this.tag = tag
@@ -37,10 +43,72 @@ export class FiberNode {
 		// 作为工作单元
 		this.pendingProps = pendingProps // 表示刚开始工作的时候保存的props
 		this.memoizedProps = null // 工作完后确认的props
-
+		this.memoizedState = null
+		this.updateQueue = null
 		this.alternate = null // 指向该fiber在另一次更新时对应的fiber
 
 		// 副作用
 		this.flags = NoFlags
+		this.subtreeFlags = NoFlags
 	}
+}
+
+// 根节点下面的root节点
+export class FiberRootNode {
+	container: Container
+	current: FiberNode
+	finishedWork: FiberNode | null
+
+	constructor(container: Container, hostRootFiber: FiberNode) {
+		this.container = container
+		this.current = hostRootFiber
+		this.finishedWork = null
+		hostRootFiber.stateNode = this
+	}
+}
+
+// 基于current创建一颗workInProgress树
+export const createWorkInProgress = (
+	current: FiberNode,
+	pendingProps: Props
+): FiberNode => {
+	let wip = current.alternate
+
+	if (wip === null) {
+		// mount
+		wip = new FiberNode(current.tag, pendingProps, current.key)
+		wip.stateNode = current.stateNode
+
+		wip.alternate = current
+		current.alternate = wip
+	} else {
+		// update
+		wip.pendingProps = pendingProps
+		wip.flags = NoFlags
+		wip.subtreeFlags = NoFlags
+	}
+	wip.type = current.type
+	wip.updateQueue = current.updateQueue
+	wip.child = current.child
+	wip.memoizedProps = current.memoizedProps
+	wip.memoizedState = current.memoizedState
+
+	return wip
+}
+
+// 根据element创建fiber
+export function createFiberFormElement(element: ReactElementType): FiberNode {
+	const { type, key, props } = element
+	let fiberTag: WorkTag = FunctionComponent
+
+	if (typeof type === 'string') {
+		// 比如说'div'也是一种div的string类型
+		fiberTag = HostComponent
+	} else if (typeof type !== 'function' && __DEV__) {
+		console.warn('为定义的type类型', element)
+	}
+
+	const fiber = new FiberNode(fiberTag, props, key)
+	fiber.type = type
+	return fiber
 }
