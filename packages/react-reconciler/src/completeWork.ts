@@ -1,9 +1,10 @@
 import { NoFlags } from './fiberFlags'
 import {
 	appendInitialChild,
+	Container,
 	createInstance,
 	createTextInstance
-} from './hostConfig'
+} from 'hostConfig'
 import { FiberNode } from './fiber'
 import { HostComponent, HostRoot, HostText } from './workTag'
 
@@ -50,7 +51,7 @@ export const completeWork = (wip: FiberNode) => {
 	}
 }
 
-function appendAllChildren(parent: FiberNode, wip: FiberNode) {
+function appendAllChildren(parent: Container, wip: FiberNode) {
 	let node = wip.child
 
 	while (node !== null) {

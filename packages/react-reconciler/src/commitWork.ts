@@ -52,11 +52,13 @@ const commitPlacement = (finishedWork: FiberNode) => {
 	// 先获取父级元素对应的数组环境节点
 	const hostParent = getHostParent(finishedWork)
 
-	// 找到对应的DOM，然后插入到父节点的DOM中
-	appendPlacementNodeIntoContainer(finishedWork, hostParent)
+	if (hostParent !== null) {
+		// 找到对应的DOM，然后插入到父节点的DOM中
+		appendPlacementNodeIntoContainer(finishedWork, hostParent)
+	}
 }
 
-function getHostParent(fiber: FiberNode) {
+function getHostParent(fiber: FiberNode): Container | null {
 	let parent = fiber.return
 
 	while (parent) {
@@ -74,6 +76,8 @@ function getHostParent(fiber: FiberNode) {
 	if (__DEV__) {
 		console.warn('未找到host parent')
 	}
+
+	return null
 }
 
 function appendPlacementNodeIntoContainer(
@@ -81,7 +85,7 @@ function appendPlacementNodeIntoContainer(
 	hostParent: Container
 ) {
 	if (finishedWork.tag === HostText || finishedWork.tag === HostComponent) {
-		appendChildToContainer(finishedWork.stateNode, hostParent)
+		appendChildToContainer(hostParent, finishedWork.stateNode)
 		return
 	}
 
