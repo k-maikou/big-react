@@ -111,12 +111,13 @@ function commitRoot(root: FiberRootNode) {
 	root.finishedWork = null
 
 	// 判断3个子阶段需要执行的操作
-	// root flags root subtreeFlags
+	// 根据 MutationMask 来判断 root flags 和 root subtreeFlags 是否有需要执行的flags
 	const subtreeFlags = (finishedWork.subtreeFlags & MutationMask) !== NoFlags
 	const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags
 
 	if (subtreeFlags || rootHasEffect) {
 		// beforeMutation
+
 		// mutation Placement
 		commitMutationEffect(finishedWork)
 

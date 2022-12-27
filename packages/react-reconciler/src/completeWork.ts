@@ -6,7 +6,7 @@ import {
 	createTextInstance
 } from 'hostConfig'
 import { FiberNode } from './fiber'
-import { HostComponent, HostRoot, HostText } from './workTag'
+import { FunctionComponent, HostComponent, HostRoot, HostText } from './workTag'
 
 // 递归中的归
 export const completeWork = (wip: FiberNode) => {
@@ -41,6 +41,9 @@ export const completeWork = (wip: FiberNode) => {
 		case HostRoot:
 			// 1. 构建DOM
 			// 2. 将DOM插入到DOM树中
+			bubbleProperties(wip)
+			return null
+		case FunctionComponent:
 			bubbleProperties(wip)
 			return null
 		default:

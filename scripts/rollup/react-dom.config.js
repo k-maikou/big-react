@@ -2,17 +2,11 @@ import { getPackageJson, resolvePkgPath, getBaseRollupPlugins } from './utils'
 import rollupPluginGeneratePackageJson from 'rollup-plugin-generate-package-json'
 import alias from '@rollup/plugin-alias'
 
-const { name, module } = getPackageJson('react-dom')
+const { name, module, peerDependencies } = getPackageJson('react-dom')
 // react-dom包的路径
 const pkgPath = resolvePkgPath(name)
 // react-dom产物的路径
 const pkgDistPath = resolvePkgPath(name, true)
-
-console.log({
-	filename: `${pkgDistPath}/jsx-runtime.js`,
-	name: 'jsx-runtime.js',
-	format: 'umd'
-})
 
 export default [
 	// react-dom
@@ -21,15 +15,16 @@ export default [
 		output: [
 			{
 				file: `${pkgDistPath}/index.js`,
-				name: 'index.js',
+				name: 'ReactDom',
 				format: 'umd'
 			},
 			{
 				file: `${pkgDistPath}/client.js`,
-				name: 'client.js',
+				name: 'client',
 				format: 'umd'
 			}
 		],
+		external: [...Object.keys(peerDependencies)],
 		plugins: [
 			// 兼容esModule
 			...getBaseRollupPlugins(),
@@ -53,5 +48,18 @@ export default [
 				})
 			})
 		]
+	},
+	// react-test-utils
+	{
+		input: `${pkgPath}/test-utils.ts`,
+		output: [
+			{
+				file: `${pkgDistPath}/test-utils.js`,
+				name: 'testUtils',
+				format: 'umd'
+			}
+		],
+		external: ['react-dom', 'react'],
+		plugins: getBaseRollupPlugins()
 	}
 ]

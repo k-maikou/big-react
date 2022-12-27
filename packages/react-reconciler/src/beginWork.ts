@@ -1,8 +1,9 @@
 import { ReactElementType } from 'shared/ReactTypes'
 import { mountChildFibers, reconcileChildFibers } from './childFiber'
 import { UpdateQueue, processUpdateQueue } from './updateQueue'
-import { HostComponent, HostText, HostRoot } from './workTag'
+import { HostComponent, HostText, HostRoot, FunctionComponent } from './workTag'
 import { FiberNode } from './fiber'
+import { renderWithHooks } from './fiberHooks'
 
 // 递归中的递阶段
 export const beginWork = (wip: FiberNode) => {
@@ -16,6 +17,8 @@ export const beginWork = (wip: FiberNode) => {
 			return updateHostComponent(wip)
 		case HostText:
 			return null
+		case FunctionComponent:
+			return updateFunctionComponent(wip)
 		default:
 			if (__DEV__) {
 				console.warn('beginWork未实现的类型')
@@ -25,12 +28,19 @@ export const beginWork = (wip: FiberNode) => {
 	return null
 }
 
+function updateFunctionComponent(wip: FiberNode) {
+	const nextChildren = renderWithHooks(wip)
+	reconcileChildren(wip, nextChildren)
+	return wip.child
+}
+
 function updateHostRoot(wip: FiberNode) {
 	const baseState = wip.memoizedState
 	const updateQueue = wip.updateQueue as UpdateQueue<Element>
 	const pending = updateQueue.shared.pending
 	updateQueue.shared.pending = null
 
+	// 对于hostRoot类型，memoizedState就是当前的root节点
 	const { memoizedState } = processUpdateQueue(baseState, pending)
 	wip.memoizedState = memoizedState
 
@@ -49,6 +59,7 @@ function updateHostComponent(wip: FiberNode) {
 function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
 	const current = wip.alternate
 
+	// 把生成的子fiber节点赋值给当前fiber节点的child
 	if (current !== null) {
 		// update
 		wip.child = reconcileChildFibers(wip, current?.child, children)
