@@ -4,8 +4,8 @@ import { Action } from 'shared/ReactTypes'
 import { FiberNode } from './fiber'
 import {
 	createUpdate,
-	createUpdateQueue,
 	enqueueUpdate,
+	createUpdateQueue,
 	processUpdateQueue,
 	UpdateQueue
 } from './updateQueue'
@@ -22,6 +22,14 @@ interface Hook {
 	memoizedState: any
 	updateQueue: unknown
 	next: Hook | null
+}
+
+const HooksDispatcherOnMount: Dispatcher = {
+	useState: mountState
+}
+
+const HooksDispatcherOnUpdate: Dispatcher = {
+	useState: updateState
 }
 
 export function renderWithHooks(wip: FiberNode) {
@@ -50,14 +58,6 @@ export function renderWithHooks(wip: FiberNode) {
 	currentHook = null
 
 	return children
-}
-
-const HooksDispatcherOnMount: Dispatcher = {
-	useState: mountState
-}
-
-const HooksDispatcherOnUpdate: Dispatcher = {
-	useState: updateState
 }
 
 function updateState<State>(): [State, Dispatch<State>] {

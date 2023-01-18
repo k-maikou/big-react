@@ -6,6 +6,8 @@ export const HostRoot = 3
 export const HostComponent = 5
 // Dom文本
 export const HostText = 6
+// Fragment
+export const Fragment = 7
 // class节点
 export const ClassComponent = 1
 
@@ -14,4 +16,5 @@ export type WorkTag =
 	| typeof HostRoot
 	| typeof HostComponent
 	| typeof HostText
+	| typeof Fragment
 	| typeof ClassComponent
