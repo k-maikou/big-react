@@ -9,6 +9,7 @@ import { scheduleUpdateOnFiber } from './workLoop'
 import { HostRoot } from './workTag'
 import { FiberNode, FiberRootNode } from './fiber'
 import { Container } from 'hostConfig'
+import { requestUpdateLanes } from './fiberLanes'
 
 // 创建root节点
 export function createContainer(container: Container) {
@@ -24,11 +25,12 @@ export function updateContainer(
 	root: FiberRootNode
 ) {
 	const hostRootFiber = root.current
-	const update = createUpdate<ReactElementType | null>(element)
+	const lane = requestUpdateLanes()
+	const update = createUpdate<ReactElementType | null>(element, lane)
 	enqueueUpdate(
 		hostRootFiber.updateQueue as UpdateQueue<ReactElementType | null>,
 		update
 	)
-	scheduleUpdateOnFiber(hostRootFiber)
+	scheduleUpdateOnFiber(hostRootFiber, lane)
 	return element
 }

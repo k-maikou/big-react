@@ -4,15 +4,21 @@ import { completeWork } from './completeWork'
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber'
 import { NoFlags, MutationMask } from './fiberFlags'
 import { commitMutationEffect } from './commitWork'
+import { Lane, mergeLanes } from './fiberLanes'
 
 let workInProgress: FiberNode | null = null // 全局指针，指向正在工作的fiber节点
 
 // 在fiber中调度update
-export function scheduleUpdateOnFiber(fiber: FiberNode) {
+export function scheduleUpdateOnFiber(fiber: FiberNode, lane: Lane) {
 	// TODO 调度功能
 	// fiberRootNode
 	const root = markUpdateFormFiberToRoot(fiber)
+	markRootUpdated(root, lane)
 	renderRoot(root)
+}
+
+function markRootUpdated(root: FiberRootNode, lane: Lane) {
+	root.pendingLanes = mergeLanes(root.pendingLanes, lane)
 }
 
 // 往上遍历到根节点
