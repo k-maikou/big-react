@@ -113,7 +113,7 @@ const commitDeletion = (childToDelete: FiberNode) => {
 				return
 			default:
 				if (__DEV__) {
-					console.warn('为处理的unmount类型', unmountFiber)
+					console.warn('未处理的unmount类型', unmountFiber)
 				}
 				break
 		}

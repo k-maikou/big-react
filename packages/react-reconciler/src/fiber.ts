@@ -71,7 +71,7 @@ export class FiberRootNode {
 		this.finishedWork = null
 		hostRootFiber.stateNode = this
 		this.pendingLanes = NoLanes
-		this.finishedLane = NoLane
+		this.finishedLane = NoLane // 本次更新的lane
 	}
 }
 

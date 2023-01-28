@@ -76,10 +76,14 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 
 export const Fragment = REACT_FRAGMENT_TYPE
 
-export const jsxDEV = (type: ElementType, config: any) => {
+export const jsxDEV = (type: ElementType, config: any, maybeKey: any) => {
 	let key: Key = null
 	const props: Props = {}
 	let ref: Ref = null
+
+	if (maybeKey !== undefined) {
+		key = key + ''
+	}
 
 	// 遍历props
 	for (const prop in config) {

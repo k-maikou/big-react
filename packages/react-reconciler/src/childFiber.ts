@@ -52,6 +52,8 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 		while (currentFiber !== null) {
 			// update
 			if (key === currentFiber.key) {
+				// key相同，比较type
+
 				if ($$typeof === REACT_ELEMENT_TYPE) {
 					if (currentFiber.type === type) {
 						let props = element.props
@@ -60,14 +62,14 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 						}
 
 						// key相同且type也相同，用useFiber复用节点
-						const existing = useFiber(currentFiber, element.props)
+						const existing = useFiber(currentFiber, props)
 						existing.return = returnFiber
 						// 如 A1B2C3D4 -> A1，复用完A1节点后，其它节点需要标记删除
 						deleteRemainingChildren(returnFiber, currentFiber.sibling)
 						return existing
 					}
 
-					// key相同 type不同删除所有旧节点
+					// key相同但type不同，没法复用。后面的兄弟节点也没有复用的可能性了，都删除
 					deleteChild(returnFiber, currentFiber)
 					break
 				} else {
