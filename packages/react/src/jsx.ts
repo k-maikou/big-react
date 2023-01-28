@@ -81,9 +81,9 @@ export const jsxDEV = (type: ElementType, config: any, maybeKey: any) => {
 	const props: Props = {}
 	let ref: Ref = null
 
-	if (maybeKey !== undefined) {
-		key = key + ''
-	}
+	// if (maybeKey !== undefined) {
+	// 	key = key + ''
+	// }
 
 	// 遍历props
 	for (const prop in config) {
