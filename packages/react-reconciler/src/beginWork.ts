@@ -51,7 +51,7 @@ function updateFunctionComponent(wip: FiberNode, renderLane: Lane) {
 
 function updateHostRoot(wip: FiberNode, renderLane: Lane) {
 	const baseState = wip.memoizedState
-	const updateQueue = wip.updateQueue as UpdateQueue<Element>
+	const updateQueue = wip.updateQueue as UpdateQueue<ReactElementType>
 	const pending = updateQueue.shared.pending
 	updateQueue.shared.pending = null
 
