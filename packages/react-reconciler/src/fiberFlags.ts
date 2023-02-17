@@ -7,6 +7,6 @@ export const Deletion = 0b0000100
 
 export const PassiveEffect = 0b0001000
 
-export const MutationMask = Placement | Update | Deletion
+export const MutationMask = Placement | Update | Deletion | PassiveEffect
 
 export const PassiveMask = PassiveEffect | Deletion

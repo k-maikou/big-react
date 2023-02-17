@@ -1,5 +1,3 @@
-// ReactDom.createRoot(root).render(<App />)
-
 import { Container } from './hostConfig'
 import {
 	createContainer,
@@ -8,6 +6,7 @@ import {
 import { ReactElementType } from 'shared/ReactTypes'
 import { initEvent } from './SyntheticEvent'
 
+// 实现 ReactDom.createRoot(root).render(<App />)
 export function createRoot(container: Container) {
 	const root = createContainer(container)
 

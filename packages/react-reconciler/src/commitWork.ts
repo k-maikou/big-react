@@ -34,7 +34,7 @@ export const commitMutationEffect = (
 		const child: FiberNode | null = nextEffect.child
 
 		if (
-			(nextEffect.subtreeFlags & (MutationMask | PassiveMask)) !== NoFlags &&
+			(nextEffect.subtreeFlags & MutationMask) !== NoFlags &&
 			child !== null
 		) {
 			nextEffect = child
