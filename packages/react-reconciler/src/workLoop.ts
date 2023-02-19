@@ -38,8 +38,8 @@ let workInProgressRootRenderLane: Lane = NoLane // 本次更新的lane
 let rootDoesHasPassiveEffects = false // 防止useEffect多次调度
 
 type RootExitStatus = number
-const RootInComplete = 1
-const RootCompleted = 2
+const RootInComplete = 1 // 代表还没更新结束
+const RootCompleted = 2 // 代表更新完成
 // 执行过程中报错了
 
 // 记录fiber节点更新的lane到FiberRootNode里
@@ -89,6 +89,7 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 
 	const curPriority = updateLane
 	const prevPriority = root.callbackPriority
+
 	// 同更新级不需要产生新的调度
 	if (curPriority === prevPriority) {
 		return
@@ -144,17 +145,17 @@ function performConcurrentWorkOnRoot(
 	const needSync = lane === SyncLane || didTimeout
 
 	// render阶段
-	const exitStatus = renderRoot(root, lane, !needSync)
+	const exitStatus: RootExitStatus = renderRoot(root, lane, !needSync)
 
 	// 开启更高优先级的调度
 	ensureRootIsScheduled(root)
 
 	if (exitStatus === RootInComplete) {
 		// 中断
-		if (root.callbackNode !== curCallbackNode) {
-			return null
+		if (root.callbackNode === curCallbackNode) {
+			return performConcurrentWorkOnRoot.bind(null, root)
 		}
-		return performConcurrentWorkOnRoot.bind(null, root)
+		return null
 	}
 
 	if (exitStatus === RootCompleted) {
@@ -180,7 +181,7 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 		return
 	}
 
-	const exitStatus = renderRoot(root, nextLane, false)
+	const exitStatus: RootExitStatus = renderRoot(root, nextLane, false)
 
 	if (exitStatus === RootCompleted) {
 		const finishedWork = root.current.alternate
@@ -224,7 +225,7 @@ function renderRoot(root: FiberRootNode, lane: Lane, shouldTimeSlice: boolean) {
 		}
 	} while (true)
 
-	// 中断执行 || render阶段执行完
+	// 中断执行
 	if (shouldTimeSlice && workInProgress !== null) {
 		return RootInComplete
 	}
